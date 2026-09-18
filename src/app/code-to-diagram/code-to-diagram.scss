@@ -1,0 +1,101 @@
+.c2d__bg-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.18;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.c2d__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 96px 32px;
+
+  @media (max-width: 960px) {
+    padding: 56px 24px;
+  }
+}
+
+.c2d__header {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto 64px;
+}
+
+.c2d__eyebrow {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin-bottom: 20px;
+}
+
+.c2d__heading {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--color-text-main);
+  margin: 0 0 16px;
+}
+
+.c2d__paragraph {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.c2d__steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+.c2d__step {
+  position: relative;
+  text-align: left;
+}
+
+.c2d__step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--gradient-primary);
+  color: var(--color-white);
+  font-weight: 700;
+  font-size: 1.0625rem;
+  box-shadow: 0 8px 18px -8px rgba(79, 70, 229, 0.5);
+  margin-bottom: 20px;
+}
+
+.c2d__step-title {
+  font-size: 1.1875rem;
+  font-weight: 700;
+  color: var(--color-text-main);
+  margin: 0 0 10px;
+}
+
+.c2d__step-description {
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+  margin: 0;
+}

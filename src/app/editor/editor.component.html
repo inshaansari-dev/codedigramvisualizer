@@ -1,0 +1,210 @@
+<div class="editor">
+  <!-- Diagram type dropdown -->
+  <div class="editor__type-dropdown">
+    <button
+      type="button"
+      class="editor__type-trigger"
+      (click)="toggleDiagramMenu()"
+      [class.editor__type-trigger--open]="isDiagramMenuOpen"
+    >
+      <span class="editor__type-trigger-icon" [innerHTML]="selectedDiagramType.icon"></span>
+      <span class="editor__type-trigger-label">{{ selectedDiagramType.label }}</span>
+      <svg class="editor__type-chevron" viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+
+    @if (isDiagramMenuOpen) {
+      <div class="editor__type-menu">
+        @for (type of diagramTypes; track type.id) {
+          <button
+            type="button"
+            class="editor__type-option"
+            [class.editor__type-option--active]="type.id === selectedDiagramTypeId"
+            (click)="selectDiagramType(type.id)"
+          >
+            <span class="editor__type-option-icon" [innerHTML]="type.icon"></span>
+            {{ type.label }}
+          </button>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Main grid -->
+  <div class="editor__grid">
+    <!-- Left column -->
+    <div class="editor__col">
+      <!-- Paste code card -->
+      <div class="editor__card">
+        <div class="editor__card-head">
+          <div class="editor__card-head-left">
+            <span class="editor__card-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M8 4 3 12l5 8M16 4l5 8-5 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <div>
+              <h3 class="editor__card-title">1. Paste Your Code</h3>
+              <p class="editor__card-subtitle">Paste code in any language (Java, Python, JavaScript, C#, etc.)</p>
+            </div>
+          </div>
+          <div class="editor__card-head-right">
+            <button type="button" class="editor__ghost-btn" (click)="clearCode()">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M9 7V4.5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1V7M18 7l-.8 12.3a1.6 1.6 0 0 1-1.6 1.5H8.4a1.6 1.6 0 0 1-1.6-1.5L6 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Clear
+            </button>
+          </div>
+        </div>
+
+        <div class="editor__code">
+          <div class="editor__gutter" #codeGutter>
+            @for (n of lineNumbers; track n) {
+              <span>{{ n }}</span>
+            }
+          </div>
+          <textarea
+            class="editor__code-input"
+            #codeTextarea
+            spellcheck="false"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            placeholder="Paste or type your code here..."
+            [(ngModel)]="code"
+            (scroll)="syncScroll(codeTextarea, codeGutter)"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Generated mermaid code card -->
+      <div class="editor__card">
+        <div class="editor__card-head">
+          <div class="editor__card-head-left">
+            <span class="editor__card-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M7 3h7l4 4v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14 3v4h4" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+            </span>
+            <div>
+              <h3 class="editor__card-title">2. Generated Mermaid Code</h3>
+              <p class="editor__card-subtitle">Mermaid code generated from your input (you can edit it manually)</p>
+            </div>
+          </div>
+          <div class="editor__card-head-right">
+            <button type="button" class="editor__ghost-btn">
+              <svg viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="12" height="12" rx="1.5" stroke="currentColor" stroke-width="1.7"/><path d="M6 15H4.5a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4.5 3h9A1.5 1.5 0 0 1 15 4.5V6" stroke="currentColor" stroke-width="1.7"/></svg>
+              Copy
+            </button>
+          </div>
+        </div>
+
+        <div class="editor__code">
+          <div class="editor__gutter">
+            <span>1</span><span>2</span><span>3</span><span>4</span>
+            <span>5</span><span>6</span><span>7</span><span>8</span>
+          </div>
+          <pre class="editor__code-text"><code>classDiagram
+    class Order {{ '{' }}
+        - UUID id
+        - Customer customer
+        - List&lt;Item&gt; items
+        + total(): double
+        + addItem(item: Item): void
+    {{ '}' }}</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right column: diagram preview -->
+    <div class="editor__col">
+      <div class="editor__card editor__card--preview">
+        <div class="editor__card-head">
+          <div class="editor__card-head-left">
+            <span class="editor__card-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="12" r="2.6" stroke="currentColor" stroke-width="1.7"/></svg>
+            </span>
+            <div>
+              <h3 class="editor__card-title">3. Diagram Preview</h3>
+              <p class="editor__card-subtitle">Rendered diagram from the Mermaid code</p>
+            </div>
+          </div>
+          <div class="editor__card-head-right editor__preview-tools">
+            <button type="button" class="editor__ghost-btn">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M9 3H4v5M15 3h5v5M9 21H4v-5M15 21h5v-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Fit
+            </button>
+            <button type="button" class="editor__icon-btn">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.7"/><path d="M21 21l-4.3-4.3M8 11h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            </button>
+            <button type="button" class="editor__icon-btn">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.7"/><path d="M21 21l-4.3-4.3M8 11h6M11 8v6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            </button>
+            <button type="button" class="editor__icon-btn">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M9 3H4v5M15 3h5v5M9 21H4v-5M15 21h5v-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="editor__preview">
+          <svg class="editor__connectors" viewBox="0 0 600 420" preserveAspectRatio="none">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 Z" fill="#111827" />
+              </marker>
+              <marker id="diamond" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+                <path d="M6 0 L12 6 L6 12 L0 6 Z" fill="#111827" />
+              </marker>
+            </defs>
+            <path d="M250 180 V 260" stroke="#111827" stroke-width="1.6" fill="none" marker-start="url(#diamond)" />
+            <path d="M330 180 L 470 260" stroke="#111827" stroke-width="1.6" fill="none" marker-end="url(#arrow)" />
+            <text x="260" y="205" class="editor__connector-label">1</text>
+            <text x="256" y="245" class="editor__connector-label">has</text>
+            <text x="440" y="205" class="editor__connector-label">1..*</text>
+            <text x="440" y="245" class="editor__connector-label">contains</text>
+          </svg>
+
+          <div class="editor__diagram">
+            <div class="editor__node editor__node--order">
+              <div class="editor__node-title">Order</div>
+              <div class="editor__node-body">
+                <div>- id: UUID</div>
+                <div>- customer: Customer</div>
+                <div>- items: List&lt;Item&gt;</div>
+              </div>
+              <div class="editor__node-divider"></div>
+              <div class="editor__node-body">
+                <div>+ total(): double</div>
+                <div>+ addItem(item: Item): void</div>
+              </div>
+            </div>
+
+            <div class="editor__node editor__node--customer">
+              <div class="editor__node-title">Customer</div>
+              <div class="editor__node-body">
+                <div>- name: String</div>
+                <div>- email: String</div>
+              </div>
+            </div>
+
+            <div class="editor__node editor__node--item">
+              <div class="editor__node-title">Item</div>
+              <div class="editor__node-body">
+                <div>- price: double</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="editor__preview-actions">
+          <button type="button" class="editor__btn editor__btn--primary">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v13m0 0-4-4m4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 19.5h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            Download SVG
+          </button>
+          <button type="button" class="editor__btn editor__btn--outline">
+            <svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="4" width="17" height="16" rx="1.6" stroke="currentColor" stroke-width="1.7"/><circle cx="8.5" cy="9.5" r="1.6" stroke="currentColor" stroke-width="1.6"/><path d="m5 17 4.5-5 3 3.2 2.5-3 4 4.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Download PNG
+          </button>
+          <button type="button" class="editor__btn editor__btn--outline">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M9 6H5.5A1.5 1.5 0 0 0 4 7.5v11A1.5 1.5 0 0 0 5.5 20h11a1.5 1.5 0 0 0 1.5-1.5V15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M14 4h6v6M20 4 11 13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Open in Editor
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

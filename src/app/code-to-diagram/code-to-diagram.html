@@ -1,0 +1,26 @@
+<section id="codetodiagram" class="c2d page-gradient-bg">
+  <video class="c2d__bg-video" autoplay muted loop playsinline>
+    <source src="videos/code-to-diagram.mp4" type="video/mp4" />
+  </video>
+
+  <div class="c2d__inner">
+    <div class="c2d__header">
+      <span class="c2d__eyebrow">How It Works</span>
+      <h2 class="c2d__heading">From Code to Diagram in Seconds</h2>
+      <p class="c2d__paragraph">
+        No manual drawing, no stale documentation. Just paste your code and watch it turn
+        into a clear, visual map of your project.
+      </p>
+    </div>
+
+    <div class="c2d__steps">
+      @for (step of steps; track step.title; let i = $index) {
+        <div class="c2d__step">
+          <span class="c2d__step-number">{{ i + 1 }}</span>
+          <h3 class="c2d__step-title">{{ step.title }}</h3>
+          <p class="c2d__step-description">{{ step.description }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>

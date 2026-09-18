@@ -1,0 +1,22 @@
+<section id="features" class="features page-gradient-bg">
+  <div class="features__inner">
+    <div class="features__header">
+      <span class="features__eyebrow">Features</span>
+      <h2 class="features__heading">Everything You Need to Visualize Your Code</h2>
+      <p class="features__paragraph">
+        Built for developers who want to understand and share their codebase without
+        drawing a single box by hand.
+      </p>
+    </div>
+
+    <div class="features__grid">
+      @for (feature of features; track feature.title) {
+        <div class="features__card">
+          <span class="features__icon">{{ feature.icon }}</span>
+          <h3 class="features__card-title">{{ feature.title }}</h3>
+          <p class="features__card-description">{{ feature.description }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>

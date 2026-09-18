@@ -28,20 +28,20 @@
     <div class="collapse navbar-collapse" id="navbarContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
+          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Editor</a>
+          <a class="nav-link" routerLink="/code-to-diagram" routerLinkActive="active">Code to Diagram</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Diagrams</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">About</a>
+          <a class="nav-link" routerLink="/features" routerLinkActive="active">Features</a>
         </li>
       </ul>
 
-      <button class="btn navbar-cta" type="button">Get Started</button>
+      <div class="navbar-auth">
+        <button class="btn navbar-login" type="button">Login</button>
+        <button class="btn navbar-cta" type="button">Sign Up</button>
+      </div>
     </div>
   </div>
 </nav>
